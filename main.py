@@ -26,8 +26,9 @@ sorted_dates = sorted(monthly_data.keys())
 curr_year = str(datetime.datetime.now().year)
 
 # testing a input feature
-year = input("Enter a year: ")
-curr_year = year
+# year = input("Enter a year: ")
+# curr_year = year
+curr_year = str(2024)
 
 # writes api data into json
 with open("formatted.json", "w") as file:
@@ -35,8 +36,13 @@ with open("formatted.json", "w") as file:
 
 # reads json data
 with open("formatted.json", "r") as file:
+    # internal variables
     ytd_month = []
     ytd_data = []
+
+    # variables to be used for plotting
+    ytd_price = []
+    ytd_month_plot = []
 
     # adds month for ytd
     for month in sorted_dates:
@@ -54,8 +60,43 @@ with open("formatted.json", "r") as file:
     with open("output.txt", "w") as file:
         print(f"{symbol} {curr_year} YTD Stock Data:\n", file=file)
 
+        # iterates the ytd monthly data for the values inside
         for entry in ytd_data:
-            print(f"{entry['month']}: ${float(entry['price']):,.2f}", file=file)
+            # format example: "2024-01-10" -> "Jan"
+            month_obj = datetime.datetime.strptime(entry['month'], "%Y-%m-%d")
+            curr_month_name = month_obj.strftime("%B")
+            curr_month_name = curr_month_name[0:3]
+
+            ytd_month_plot.append(curr_month_name)
+            ytd_price.append(float(entry['price']))
+
+            print(f"{curr_month_name}: ${float(entry['price']):,.2f}", file=file)
+
+    # plot data into graph
+    x = ytd_month_plot
+    y = ytd_price
+
+    plt.plot(x, y, marker = "o")
+    plt.grid(alpha = 0.3)
+
+    # ensures enough graph spacing
+    min_price = 100000000
+    max_price = 0
+    padding = 0.33
+
+    for price in ytd_price:
+        if min_price > price:
+            min_price = price
+        if max_price < price:
+            max_price = price
+            
+    min_price_lim = min_price - (min_price * padding)
+    max_price_lim = max_price + (max_price * padding)
+    plt.ylim(min_price_lim, max_price_lim)
+
+    plt.show()
+
+    
                 
 
 '''
