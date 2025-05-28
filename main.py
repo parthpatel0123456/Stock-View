@@ -4,6 +4,8 @@ import requests
 import matplotlib.pyplot as plt
 import datetime
 
+
+
 api_key = os.getenv("ALPHAVTANGE_API_KEY")
 
 base_url = 'https://www.alphavantage.co/query?function=TIME_SERIES_MONTHLY&symbol='
@@ -73,6 +75,7 @@ with open("formatted.json", "r") as file:
             print(f"{curr_month_name}: ${float(entry['price']):,.2f}", file=file)
 
     # plot data into graph
+    plt.title(f"{symbol} - {curr_year} YTD")
     x = ytd_month_plot
     y = ytd_price
 
