@@ -3,24 +3,45 @@ import json
 import requests
 import matplotlib.pyplot as plt
 import datetime
+from website import create_app
+
+app = create_app()
+
+# if __name__ == '__main__':
+#     app.run(debug=True)
 
 
 
 api_key = os.getenv("ALPHAVTANGE_API_KEY")
 
 base_url = 'https://www.alphavantage.co/query?function=TIME_SERIES_MONTHLY&symbol='
+base_earnings_url = 'https://www.alphavantage.co/query?function=EARNINGS&symbol='
+base_news_url = 'https://www.alphavantage.co/query?function=NEWS_SENTIMENT&tickers='
 
 # replace the "demo" apikey below with your own key from https://www.alphavantage.co/support/#api-key
 
 symbol = "TSLA"
 # symbol = input("Enter a symbol: ")
-url = f"{base_url}{symbol}&apikey={api_key}"
-r = requests.get(url)
+stock_url = f"{base_url}{symbol}&apikey={api_key}"
+r = requests.get(stock_url)
 data = r.json()
 
-# temp reader for offline testing
-with open("formatted.json", "r") as file:
+earnings_url = f"{base_earnings_url}{symbol}&apikey={api_key}"
+e_r = requests.get(earnings_url)
+e_data = e_r.json()
+
+news_url = f"{base_news_url}{symbol}&apikey={api_key}"
+n_r = requests.get(news_url)
+n_data = n_r.json()
+
+
+# temp base reader for offline testing
+with open("base_raw.json", "r") as file:
     data = json.load(file)
+
+# temp earnings reader for offline testing
+with open("earnings_raw.json", "r") as file:
+    e_data = json.load(file)
 
 # monthly_data = data['Monthly Time Series']
 monthly_data = data
@@ -32,12 +53,12 @@ curr_year = str(datetime.datetime.now().year)
 # curr_year = year
 curr_year = str(2024)
 
-# writes api data into json
-with open("formatted.json", "w") as file:
+# writes base url api data into json
+with open("base_raw.json", "w") as file:
     print(json.dumps(monthly_data, indent=2), file=file)
 
-# reads json data
-with open("formatted.json", "r") as file:
+# reads base url json data
+with open("base_raw.json", "r") as file:
     # internal variables
     ytd_month = []
     ytd_data = []
@@ -98,50 +119,31 @@ with open("formatted.json", "r") as file:
     plt.ylim(min_price_lim, max_price_lim)
 
     plt.show()
+ 
+# writes earnings url api data into json
+with open("earnings_raw.json", "w") as file:
+    print(json.dumps(e_data, indent=2), file=file)
 
-    
-                
+# writes raw earnings data from json into filtered json
+with open("earnings_raw.json", "r") as file:
+    quarterly_data = []
 
-'''
-# print json data into txt
-with open("formatted.json", "r") as file:
-    data = json.load(file)
-    month = data['Monthly Time Series']
-    left = []
-    height = []
-    starting_month = ['2024-06-28']
-      
-    for info in monthly_data:
-        for field, information in info.items():
-            if field == "2. high":
-                print(f"1. High: ${float(information):,.2f}", file=file)
-                height.append(float(information))
-            if field == "3. low":
-                print(f"2. Low: ${float(information):,.2f}", file=file)
-            if field == "5. volume":
-                print(f"3. Volume: {int(information):,}", file=file)
+    for quarter in e_data['quarterlyEarnings']:
+        if quarter['reportedDate'].startswith(curr_year):
+            quarterly_data.append(quarter)
+    with open("earnings_filtered.json", "w") as file:
+        print(json.dumps(quarterly_data, indent=2), file=file)
 
-    # graph
-    plt.plot(left, height, linestyle='solid', linewidth = 2,
-         marker='o', markerfacecolor='black', markersize=6)
+# writes news data from json into filtered json
+with open("news_raw.json", "w") as file:
+    print(json.dumps(n_data, indent=2), file=file) 
 
-    min_height = float(10000000000.0)
-    max_height = float(0.0)
-    for item in height:
-        if float(item) < float(min_height):
-            min_height = float(item)
-        if float(item) > float(max_height):
-            max_height = (item)
+# writes raw news data from json into filtered json
+with open("news_raw.json", "r") as file:
+    news_articles = []
+    for article in n_data['feed']:
+        if symbol in article['title']:
+            news_articles.append({'title': article['title'], 'url': article['url']})
 
-    max_height_lim = max_height
-
-    padding = (max_height - min_height) * 0.1
-    y_lower = min_height - padding
-    y_upper = max_height - padding
-
-    plt.ylim(round(y_lower, 2), round(y_upper, 2))
-    plt.xlim(1, 12)
-    plt.title(f"{symbol}")
-    plt.show()
-
-'''
+    with open("news_filtered.json", "w") as file:
+        print(json.dumps(news_articles, indent=2), file=file)

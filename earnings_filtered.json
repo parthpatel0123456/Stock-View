@@ -1,0 +1,20 @@
+[
+  {
+    "fiscalDateEnding": "2025-03-31",
+    "reportedDate": "2025-04-22",
+    "reportedEPS": "0.27",
+    "estimatedEPS": "0.4147",
+    "surprise": "-0.1447",
+    "surprisePercentage": "-34.8927",
+    "reportTime": "post-market"
+  },
+  {
+    "fiscalDateEnding": "2024-12-31",
+    "reportedDate": "2025-01-29",
+    "reportedEPS": "0.73",
+    "estimatedEPS": "0.76",
+    "surprise": "-0.03",
+    "surprisePercentage": "-3.9474",
+    "reportTime": "post-market"
+  }
+]
