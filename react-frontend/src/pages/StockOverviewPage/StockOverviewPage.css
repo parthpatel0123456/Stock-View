@@ -1,0 +1,45 @@
+h1 {
+  text-align: left;
+}
+
+.overview-container {
+  font-family: Inter;
+  padding: clamp(1rem, 2.5vw, 4rem);
+
+  background-color: #f9fafc;
+
+  position: relative;
+  background-size: cover;
+  background-position: center;
+  overflow: hidden;
+  min-height: 100vh;
+
+  padding-right: clamp(1.5rem, 2.5vw, 4rem);
+  padding-left: clamp(1.5rem, 2.5vw, 4rem);
+}
+
+.overview-container::before {
+  content: "";
+  position: absolute;
+  inset: 0; /* shorthand for top: 0; right: 0; bottom: 0; left: 0 */
+  background-image: radial-gradient(circle at 15% 0%, rgba(0, 0, 255, 0.1) 0%, rgba(0, 0, 255, 0) 25%), radial-gradient(circle at 80% 30%, rgba(0, 0, 255, 0.15) 0%, rgba(0, 0, 255, 0) 15%),
+    radial-gradient(circle at 5% 90%, rgba(0, 0, 255, 0.2) 0%, rgba(0, 0, 255, 0) 15%);
+
+  pointer-events: none; /* allows clicks to pass through */
+  z-index: 1;
+}
+
+.responsive-container {
+  justify-self: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  border-radius: 0.5rem;
+  background-color: #fffffc;
+  padding-top: 2.5rem;
+  padding-bottom: 2.5rem;
+
+  z-index: 2;
+}
+
+.range-heading {
+  text-align: center;
+}

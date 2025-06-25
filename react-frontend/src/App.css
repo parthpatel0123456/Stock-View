@@ -1,0 +1,118 @@
+.main-content {
+  margin: 0 auto;
+  padding: 0 clamp(1rem, 2.5vw, 4rem);
+  max-width: 900px;
+}
+
+.main-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.main-header p {
+  text-align: center;
+}
+
+.stock-container {
+  font-family: Inter;
+  padding: clamp(1rem, 2.5vw, 4rem);
+  background-color: #f9fafc;
+  background-image: radial-gradient(circle at 80% 20%, rgba(0, 0, 255, 0.05) 0%, rgba(0, 0, 255, 0) 25%), radial-gradient(circle at 15% 0%, rgba(0, 0, 255, 0.1) 0%, rgba(0, 0, 255, 0) 35%),
+    radial-gradient(circle at 15% 50%, rgba(0, 123, 255, 0.1) 0%, rgba(0, 123, 255, 0) 25%), radial-gradient(circle at 60% 85%, rgba(0, 123, 255, 0.075) 0%, rgba(0, 123, 255, 0) 25%);
+  min-height: 100vh;
+}
+
+.stock-container-line {
+  margin-top: 2.5rem;
+  border-top: 1px solid #ccc; /* Optional: add a visible line if not already styled */
+  justify-self: center;
+}
+
+.search {
+  display: flex;
+  justify-content: center;
+}
+
+.search-box {
+  padding: 0.75rem;
+  width: 25rem;
+  border-radius: 0.5rem;
+  border: none;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.suggestions {
+  list-style: none;
+  padding-left: 0.25rem;
+}
+
+.suggested-stock {
+  padding-bottom: 0.5rem;
+}
+
+.header-buttons {
+  border-radius: 0.5rem;
+  border: 1px solid;
+  padding-left: 2.5rem;
+  padding-right: 2.5rem;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+
+.features-container {
+  padding-right: clamp(1rem, 2.5vw, 4rem);
+
+  padding-top: 0.5rem;
+  justify-items: flex-start;
+}
+
+.tech-stack-container {
+  padding-right: clamp(1rem, 2.5vw, 4rem);
+  padding-top: 0.5rem;
+  justify-items: flex-start;
+  width: 100%;
+}
+
+.title {
+  text-align: left;
+  font-size: 2rem;
+}
+
+.list-overview {
+  padding-left: 2.5rem;
+}
+
+.list {
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+}
+
+.tech-stack-wrapper {
+  width: 100%;
+}
+
+.tech-stack-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: clamp(2.5rem, 2.5vw, 2.5rem);
+}
+
+.tech-stack-sub-headline {
+  font-size: 1.75rem;
+  text-align: center;
+}
+
+.tech-stack-card {
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  padding-top: clamp(1rem, 2.5vw, 1.5rem);
+  padding-right: clamp(1rem, 2.5vw, 1.5rem);
+  padding-bottom: clamp(1.25rem, 2.5vw, 2.25rem);
+  padding-left: clamp(1rem, 2.5vw, 1.5rem);
+  border-radius: 0.5rem;
+  background-color: #fffffc;
+  min-height: 250px;
+
+  background: radial-gradient(circle at top left, rgba(0, 123, 255, 0.3) 0%, rgba(0, 123, 255, 0) 20%), radial-gradient(circle at bottom right, rgba(0, 123, 255, 0.05) 0%, rgba(0, 123, 255, 0) 50%);
+}

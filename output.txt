@@ -1,7 +1,14 @@
-TSLA 2025 YTD Stock Data:
+TSLA 2024 YTD Stock Data:
 
-Jan: $404.60
-Feb: $292.98
-Mar: $259.16
-Apr: $282.16
-May: $339.34
+Jan: $187.29
+Feb: $201.88
+Mar: $175.79
+Apr: $183.28
+May: $178.08
+Jun: $197.88
+Jul: $232.07
+Aug: $214.11
+Sep: $261.63
+Oct: $249.85
+Nov: $345.16
+Dec: $403.84

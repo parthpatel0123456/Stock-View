@@ -1,7 +1,7 @@
-from flask import Blueprint
+from flask import Blueprint, jsonify
 
 views = Blueprint('views', __name__)
 
-@views.route('/')
-def home():
-    return "<h1>Test</h1>"
+@views.route('/api/test')
+def api_home():
+    return jsonify({"message": "Test"})

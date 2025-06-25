@@ -1,6 +1,5 @@
 # Ignore secret files
 .env
-api.env
 
 # Python cache
 __pycache__/
@@ -12,3 +11,11 @@ venv/
 .vscode/
 
 __init__.py
+
+base_raw.json
+earnings_filtered.json
+earnings_raw.json
+news_filtered.json
+news_raw.json
+troubleshooting.md
+

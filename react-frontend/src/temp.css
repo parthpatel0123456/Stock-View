@@ -1,0 +1,89 @@
+.financials-container {
+  font-family: Inter;
+  padding: clamp(1rem, 2.5vw, 4rem);
+  background-color: #f9fafc;
+  overflow-x: auto;
+  height: 2000px;
+
+  position: relative;
+  background-size: cover;
+  background-position: center;
+  overflow: hidden;
+}
+
+.financials-container::before {
+  content: "";
+  position: absolute;
+  inset: 0; /* shorthand for top: 0; right: 0; bottom: 0; left: 0 */
+  background-image: radial-gradient(circle at 80% 20%, rgba(0, 0, 255, 0.1) 0%, rgba(0, 0, 255, 0) 25%), radial-gradient(circle at 15% 0%, rgba(0, 0, 255, 0.1) 0%, rgba(0, 0, 255, 0) 35%);
+  pointer-events: none; /* allows clicks to pass through */
+  z-index: 1;
+}
+
+.financials-container table {
+  border-collapse: collapse; /* keeps borders tight but works well with padding */
+  width: 100%; /* optional: make table full width */
+}
+
+.financials-container th,
+.financials-container td {
+  padding: 10px 15px; /* add vertical and horizontal padding */
+  text-align: left; /* align text nicely */
+  border-bottom: 1px solid #ddd; /* light horizontal line for rows */
+}
+
+.financials-container tbody tr:nth-child(even) {
+  background-color: #fffffc;
+}
+
+.data-table {
+  border-radius: 0.5rem;
+}
+
+.data-container {
+  padding-top: 5rem;
+  min-height: 55vh;
+}
+
+.data-table::before {
+}
+
+.graphs-outer {
+  display: flex;
+  flex-wrap: wrap;
+  padding-top: 5rem;
+
+  gap: 4rem;
+  justify-content: center;
+}
+
+.graphs-inner {
+  width: 45%;
+  padding-bottom: 6.5rem;
+  padding-right: 1rem;
+  padding-left: 1rem;
+  background-color: #fffffc;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  border-radius: 0.5rem;
+  height: 450px;
+
+  position: relative;
+  background-size: cover;
+  background-position: center;
+  overflow: hidden;
+}
+
+.graphs-inner::before {
+  content: "";
+  position: absolute;
+  inset: 0; /* shorthand for top: 0; right: 0; bottom: 0; left: 0 */
+  background: radial-gradient(circle at top right, rgba(0, 0, 255, 0.15) 0%, rgba(0, 0, 255, 0) 25%);
+  pointer-events: none; /* allows clicks to pass through */
+  z-index: 1;
+}
+
+.graph-title {
+  justify-self: center;
+  color: black;
+  font-size: 2rem;
+}

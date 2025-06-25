@@ -1,0 +1,123 @@
+/* === Base Container === */
+.dividends-container {
+  font-family: Inter, sans-serif;
+  padding: clamp(1rem, 2.5vw, 4rem);
+  background-color: #f9fafc;
+  position: relative;
+  background-size: cover;
+  background-position: center;
+  min-height: 100vh;
+  overflow-x: hidden;
+  z-index: 0;
+  padding-right: clamp(1.5rem, 2.5vw, 4rem);
+  padding-left: clamp(1.5rem, 2.5vw, 4rem);
+}
+
+.dividends-container::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle at 80% 20%, rgba(0, 0, 255, 0.1) 0%, rgba(0, 0, 255, 0) 25%), radial-gradient(circle at 15% 0%, rgba(0, 0, 255, 0.1) 0%, rgba(0, 0, 255, 0) 35%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* === Table (Desktop) === */
+.dividends-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 600px;
+  z-index: 2;
+  position: relative;
+}
+
+.dividends-table th,
+.dividends-table td {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  font-size: clamp(0.8rem, 2vw, 1rem);
+  border-bottom: 1px solid #ddd;
+}
+
+.dividends-table tbody tr:nth-child(odd) {
+  background-color: #f8f8f8;
+}
+
+/* === Data Wrapper === */
+.dividends-table {
+  width: 100%;
+  position: relative;
+  z-index: 2;
+  background: transparent;
+  border-radius: 0.5rem;
+  overflow-x: visible;
+  padding: 0;
+  box-shadow: none;
+}
+
+/* Override styles on desktop only */
+@media (min-width: 769px) {
+  .dividends-table {
+    background: white;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    overflow-x: auto;
+  }
+}
+
+/* === Mobile Card Layout === */
+.dividends-mobile-cards {
+  display: none;
+  flex-direction: column;
+  gap: 2rem;
+  padding: 0;
+  margin: 0;
+}
+
+.dividends-mobile-card {
+  background: #fff;
+  padding: 1.25rem clamp(1rem, 5vw, 2rem); /* Responsive padding */
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  font-size: 1rem;
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  box-sizing: border-box;
+
+  background-image: radial-gradient(circle at 100% 100%, rgba(0, 0, 255, 0.15) 0%, rgba(0, 0, 255, 0) 25%);
+}
+
+.dividends-mobile-card p {
+  margin: 0.25rem 0;
+}
+
+.dividends-mobile-label {
+  font-weight: bold;
+  display: inline-block;
+  min-width: 120px;
+}
+
+/* === Show cards on small screens only === */
+@media (max-width: 768px) {
+  .dividends-table {
+    display: none;
+  }
+
+  .dividends-mobile-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem; /* space between cards */
+    padding: 0;
+
+    margin: 0;
+  }
+}
+
+/* === No Data Message === */
+.no-data-msg {
+  padding: 10%;
+  text-align: center;
+  font-weight: 600;
+  font-size: clamp(1.25rem, 3vw, 2rem);
+  color: #333;
+}
