@@ -8,17 +8,17 @@
 
 ### 1.Activate Venv
 
-source venv/bin/activate
+- source venv/bin/activate
 
 ### 2. Run Flask (backend)
 
-python main.py
+- python main.py
 
 ### 3. Run React (frontend)
 
-cd react-frontend
-npm start
+- cd react-frontend
+- npm start
 
-### 4. Run Database (SQLite)
+### 4. Run SQLite (database)
 
-sqlite3 /backend/stockview.db
+- sqlite3 /backend/stockview.db
