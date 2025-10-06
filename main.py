@@ -8,6 +8,9 @@ import yfinance
 from website import create_app
 from flask import Flask, send_from_directory, jsonify, request
 from dotenv import load_dotenv
+from backend.models import db, bcrypt, StockNews
+from datetime import datetime as sql_datetime
+
 load_dotenv(dotenv_path=".env")
 
 finnhub_api_key = os.getenv("FINNHUB_API_KEY")
@@ -15,8 +18,21 @@ marketaux_api_key = os.getenv("MARKETAUX_API_KEY")
 alpha_vantage_api_key = os.getenv("ALPHAVTANGE_API_KEY")
 polygon_api_key = os.getenv("POLYGON_API_KEY")
 
+# Flask
 STATIC_DIR = os.path.join(os.getcwd(), "react-frontend", "build")
 app = Flask(__name__, static_folder = STATIC_DIR, static_url_path='')
+
+# Database
+BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+DB_PATH = os.path.join(BASE_DIR, "backend", "stockview.db")
+app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{DB_PATH}"
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+db.init_app(app)
+bcrypt.init_app(app)
+
+with app.app_context():
+    db.create_all()
 
 @app.route('/')
 def home():
@@ -35,20 +51,128 @@ def get_stock_news(symbol):
     today = datetime.date.today()
     latest_range = today.strftime("%Y-%m-%d")
     earliest_range = (today - datetime.timedelta(days=30)).strftime("%Y-%m-%d")
+    db_range = (today - datetime.timedelta(days=30)).strftime("%Y-%m-%d")
 
-    news_url = f"https://finnhub.io/api/v1/company-news?symbol={symbol}&from={earliest_range}&to={latest_range}&token={finnhub_api_key}"
-    finnhub_news_response = requests.get(news_url)
+    with app.app_context():
+        existing_articles = (
+            StockNews.query
+            .filter_by(symbol=symbol.upper())
+            .filter(StockNews.published_at >= db_range)
+            .all()
+        )
 
+        if existing_articles:
+            print("Using DB for", symbol)
 
-    news_url = f"https://api.marketaux.com/v1/news/all?symbols={symbol}&filter_entities=true&language=en&api_token={marketaux_api_key}&limit=50&page=1"
-    marketaux_news_response = requests.get(news_url)
-    marketaux_news_data = marketaux_news_response.json().get("data", [])
+            finnhub_articles = [a for a in existing_articles if a.api == "Finnhub"]
+            marketaux_articles = [a for a in existing_articles if a.api == "MarketAux"]
+
+            return jsonify({
+                "symbol": symbol.upper(),
+                "finnhubNews": [
+                    {
+                        "source": a.source,
+                        "headline": a.headline or a.description,
+                        "summary": a.summary,
+                        "url": a.url,
+                        "image": a.image,
+                        "published_at": a.published_at.isoformat()
+                    } for a in finnhub_articles
+                ],
+                "marketauxNews": [
+                    {
+                        "source": a.source,
+                        "headline": a.headline or a.description,
+                        "summary": a.summary,
+                        "url": a.url,
+                        "image": a.image,
+                        "published_at": a.published_at.isoformat()
+                    } for a in marketaux_articles
+                ],
+                "lastUpdated": latest_range,
+                "source": "database"
+            })
+
+        print("API for", symbol)
+
+        news_url = f"https://finnhub.io/api/v1/company-news?symbol={symbol}&from={earliest_range}&to={latest_range}&token={finnhub_api_key}"
+        finnhub_news_response = requests.get(news_url)
+
+        for article in finnhub_news_response.json():
+            url = article.get("url")
+            if not url:
+                continue
+
+            exists = StockNews.query.filter_by(url=url).first()
+            if exists:
+                continue
+            
+            pub_date = article.get("published_at")
+            try:
+                if pub_date:
+                    if isinstance(pub_date, (int, float)):
+                        pub_date = datetime.datetime.utcfromtimestamp(pub_date)
+                    else:    
+                        pub_date = sql_datetime.fromisoformat(pub_date.replace("Z", "+00:00"))
+                else:
+                    pub_date = sql_datetime.now()
+            except Exception:
+                pub_date = sql_datetime.now()
+
+            db.session.add(StockNews(
+                symbol=symbol.upper(),
+                source=article.get("source"),
+                headline=article.get("headline") or "headline not found",
+                summary=article.get("summary"),
+                url=url,
+                image=article.get("image"),
+                published_at=pub_date,
+                api="Finnhub"
+            ))
+
+        news_url = f"https://api.marketaux.com/v1/news/all?symbols={symbol}&filter_entities=true&language=en&api_token={marketaux_api_key}&limit=50&page=1"
+        marketaux_news_response = requests.get(news_url)
+        marketaux_news_data = marketaux_news_response.json().get("data", [])
+
+        for article in marketaux_news_data:
+            url = article.get("url")
+            if not url:
+                continue
+
+            exists = StockNews.query.filter_by(url=url).first()
+            if exists:
+                continue
+            
+            pub_date = article.get("published_at")
+            try:
+                if pub_date:
+                    if isinstance(pub_date, (int, float)):
+                        pub_date = datetime.datetime.fromtimestamp(pub_date)
+                    else:    
+                        pub_date = sql_datetime.fromisoformat(pub_date.replace("Z", "+00:00"))
+                else:
+                    pub_date = sql_datetime.now()
+            except Exception:
+                pub_date = sql_datetime.now()
+
+            db.session.add(StockNews(
+                symbol=symbol.upper(),
+                source=article.get("source"),
+                summary=article.get("snippet"),
+                headline=article.get("title"),
+                url=url,
+                image=article.get("image_url"),
+                published_at=pub_date,
+                api="MarketAux"
+            ))
+        db.session.commit()
 
     return jsonify({
         "symbol": symbol.upper(),
         "marketauxNews": marketaux_news_data,
         "finnhubNews": finnhub_news_response.json(),
         "lastUpdated": latest_range,
+        "source": "api"
         })
 
 @app.route('/api/stocks/<symbol>/earnings')

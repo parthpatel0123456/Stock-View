@@ -21,4 +21,4 @@
 
 ### 4. Run SQLite (database)
 
-- sqlite3 /backend/stockview.db
+- sqlite3 backend/stockview.db
